@@ -1,6 +1,6 @@
 const express=require('express');
 const router=express.Router();
-const userController=require(`${__dirname}/../controller/userController`);
+const userController=require(`${__dirname}/../controllers/userController`);
 
 router.route('/')
 .get(userController.getAllUsers)
