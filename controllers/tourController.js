@@ -1,7 +1,16 @@
 const Tour=require(`${__dirname}/../models/tourModel`);
 exports.getAllTours=async (request,response)=>{
     try{
-        const tours=await Tour.find();
+        const queryObj={...request.query};
+        //Excluding default features from query which are not part of documents
+        const excludedFields=['page','sort','limits','fields'];
+        excludedFields.forEach(el=>delete queryObj[el]);
+        //Forming a query        
+        const query=Tour.find(queryObj);
+
+        //Excecuting the query
+        const tours=await query;
+        //Sending a response
         response.status(200).json({
             status:'success',
             results:tours.length,

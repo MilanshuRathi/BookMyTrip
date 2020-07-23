@@ -1,6 +1,6 @@
 //Importing Express application from app.js
 const dotenv=require('dotenv');
-dotenv.config({path:'./config.env'});
+dotenv.config({path:`${__dirname}/config.env`});
 const mongoose=require('mongoose');
 
 //Configuring connection with Database
