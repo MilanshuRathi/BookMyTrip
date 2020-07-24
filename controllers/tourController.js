@@ -1,16 +1,14 @@
 const Tour=require(`${__dirname}/../models/tourModel`);
+const APIfeatures=require(`${__dirname}/../utils/APIfeatures`);
+exports.top5ToursAliasFunc=(request,response,next)=>{    
+    request.query.limit='5';
+    request.query.sort='-ratingsAverage,price';
+    request.query.fields='name,price,ratingsAverage,summary,difficulty';
+    next();
+}
 exports.getAllTours=async (request,response)=>{
-    try{
-        const queryObj={...request.query};
-        //Excluding default features from query which are not part of documents
-        const excludedFields=['page','sort','limits','fields'];
-        excludedFields.forEach(el=>delete queryObj[el]);
-        //Forming a query        
-        const query=Tour.find(queryObj);
-
-        //Excecuting the query
-        const tours=await query;
-        //Sending a response
+    try{                    
+        const tours=await new APIfeatures(Tour,request.query).filter().sort().fields().pagingation().query;                
         response.status(200).json({
             status:'success',
             results:tours.length,
@@ -23,7 +21,7 @@ exports.getAllTours=async (request,response)=>{
         response.status(404).json({
             status:'fail',
             message:err
-        })
+        });
     }
 };
 exports.createTour=async (request,response)=>{
