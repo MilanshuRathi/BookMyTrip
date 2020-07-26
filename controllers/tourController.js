@@ -8,23 +8,31 @@ exports.top5ToursAliasFunc=(request,response,next)=>{
 }
 exports.getTourStats=async (request,response)=>{
     try{        
-        const stats=await Tour.aggregate([
+        const year=parseInt(request.params.year);
+        const stats=await Tour.aggregate([    
             {
-                $match:{ratingsAverage:{$gte:4.5}}
+                $project:{startDates:1,name:1}
             },
             {
-                $group:{
-                    _id:{$toUpper:"$difficulty"},
-                    numTours:{$sum:1},
-                    numRatings:{$sum:"$ratingsQuantity"},
-                    avgRating:{$avg:"$ratingsAverage"},
-                    avgPrice:{$avg:"$price"},
-                    minPrice:{$min:"$price"},
-                    maxPrice:{$max:"$price"},
+                $unwind:"$startDates"
+            },
+            {
+                $match:{
+                    startDates:{
+                        $gte:new Date(`${year}-01-01`),
+                        $lte:new Date(`${year}-12-31`)
+                    }
                 }
             },
             {
-                $sort:{avgRating:-1}
+                $group:{
+                    _id:{$month:"$startDates"},
+                    numTours:{$sum:1},
+                    tours:{$push:"$name"}                    
+                }
+            },
+            {
+                $sort:{numTours:-1}
             }
         ]);
         response.status(200).json({
