@@ -1,6 +1,5 @@
 const mongoose=require('mongoose');
 const  slugify = require('slugify');
-
 //Making a schema(data structure for the models with default data types and validations)
 const tourSchema=new mongoose.Schema({
     name:{
@@ -30,7 +29,7 @@ const tourSchema=new mongoose.Schema({
         type:Number,
         default:4.5,
         min:[1,"A rating must be greater than 0"],
-        max:[5,"A rating must be less than 6"]
+        max:[5,"A rating must be less than 6"],        
     },
     ratingsQuantity:{
         type:Number,
@@ -81,11 +80,10 @@ tourSchema.virtual('durationWeeks').get(function(){
     return this.duration/7;
 });
 //Doccument Middleware and here this worked only because we are saving a new document ....'this' will not refer to the document while updating/insertingMany documents
-tourSchema.pre('save',function(next){
+tourSchema.pre('save',function(next){    
     this.slug=slugify(this.name,{lower:true});
     next();
 });
-
 //Mongoose have 4 types of middlewares 1)Document 2)Query 3)Aggregation Middleware 4)Model middleware
 
 //Making a model out of a schema...which is basically a wrapping of schema to deal with CRUD operations
