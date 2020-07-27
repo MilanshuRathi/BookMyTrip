@@ -44,7 +44,7 @@ exports.getTourStats = catchAsyncError(async (request, response, next) => {
     });
 });
 exports.getAllTours = catchAsyncError(async (request, response, next) => {                     
-    const tours = await new APIfeatures(Tour, request.query).filter().sort().fields().pagingation().query;    
+    const tours = await new APIfeatures(Tour, request.query).filter().sort().fields().pagination().query;    
     response.status(200).json({
         status: 'success',
         results: tours.length,

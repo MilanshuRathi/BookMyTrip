@@ -32,7 +32,7 @@ class APIfeatures{
             this.query=this.query.select('-__v');
         return this;
     }
-    pagingation(){
+    pagination(){
         const limit=parseInt(this.requestQueryObject.limit)||100,skip=((parseInt(this.requestQueryObject.page)||1)-1)*limit;
         this.query=this.query.skip(skip).limit(limit);
         return this;

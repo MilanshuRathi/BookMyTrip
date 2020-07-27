@@ -6,6 +6,7 @@ const tourSchema=new mongoose.Schema({
         type:String,
         required:[true,"A tour must have a name"],
         unique:true,
+        trim:true,
         minlength:[10,"A tour must have a min value greather than 9"],
         maxlength:[40,"A tour must have a min value less than 41"]
     },
