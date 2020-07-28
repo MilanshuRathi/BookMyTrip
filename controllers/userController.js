@@ -7,6 +7,7 @@ exports.getAllUsers=catchAsyncError(async (request,response,next)=>{
     const users=await User.find();
     response.status(200).json({
         status:'success',
+        results:users.length,
         data:{
             users
         }

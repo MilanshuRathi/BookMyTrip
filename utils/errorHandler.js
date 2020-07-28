@@ -48,6 +48,8 @@ module.exports = (error, request, response, next) => {
         if (error instanceof mongoose.Error.CastError) error = handleCastErrorDB(error);
         else if (error instanceof mongoose.Error.ValidationError) error = handleValidationErrorDB(error);
         else if (error.code === 11000) error = handleMongoErrorDB(error);
+        else if (error.name === 'JsonWebTokenError') error = new AppError('Invalid token. Please log in again!', 401);
+        else if (error.name === 'TokenExpiredError') error = new AppError('Your token has expired! Please log in again.', 401);
         sendProdErr(error, response);
     }
     next();
