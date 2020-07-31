@@ -1,11 +1,21 @@
 const jwt=require('jsonwebtoken');
 const crypto=require('crypto');
-const { hash } = require('bcryptjs');
 const User = require(`${__dirname}/../models/userModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const AppError=require(`${__dirname}/../utils/AppError`);
 const sendEmail=require(`${__dirname}/../utils/email`);
-const signToken=(userId)=>jwt.sign({id:userId},process.env.JWT_SECRET_KEY,{expiresIn:process.env.JWT_EXPIREIN});
+
+//Util Methods
+const sendToken=(id,data,statusCode,response)=>{
+    const token=jwt.sign({id},process.env.JWT_SECRET_KEY,{expiresIn:process.env.JWT_EXPIREIN});    
+    response.status(statusCode).json({
+        status:'success',
+        token,
+        data        
+    });
+}
+
+//Export methods
 exports.signUp = catchAsyncError(async(request, response, next) => {
     const newUser = await User.create({
         name:request.body.name,
@@ -15,14 +25,15 @@ exports.signUp = catchAsyncError(async(request, response, next) => {
         passwordChangedAt:request.body.passwordChangedAt,
         role:request.body.role
     });
-    const token=signToken(newUser._id);
-    response.status(200).json({
-        status:'success',
-        token,
-        data:{
-            user:newUser
-        }
-    });            
+    // const token=signToken(newUser._id);
+    // response.status(200).json({
+    //     status:'success',
+    //     token,
+    //     data:{
+    //         user:newUser
+    //     }
+    // });
+     sendToken(newUser._id,newUser,201,response);           
 });
 exports.login=catchAsyncError(async (request,response,next)=>{
     let {email,password}=request.body;
@@ -31,14 +42,15 @@ exports.login=catchAsyncError(async (request,response,next)=>{
     const user=await User.findOne({email}).select('+password');    
     if(!user||!await user.correctPassword(password,user.password))
         return next(new AppError('Incorrect email or password',401));
-    const token=signToken(user._id);
-    response.status(200).json({
-        status:'success',
-        token
-    });
+    // const token=signToken(user._id);
+    // response.status(200).json({
+    //     status:'success',
+    //     token
+    // });    
+    sendToken(user._id,null,200,response);
 });
 exports.protect=catchAsyncError(async (request,response,next)=>{
-    let token;
+    let token;    
     //Get Token and check if it's there
     if(request.headers.authorization&&request.headers.authorization.startsWith('Bearer'))
         token=request.headers.authorization.split(' ')[1];    
@@ -51,7 +63,7 @@ exports.protect=catchAsyncError(async (request,response,next)=>{
     const currentUser=await User.findById(decoded.id);
     if(!currentUser)
         return next(new AppError('The user belonging to this token does no longer exist.',401));
-    //Now,check if user changed his password after ...allotment of JWT or not...if yes..then deny the accesss 
+    //Now,check if user changed his password after ...allotment of JWT or not...if yes..then deny the accesss     
     if(currentUser.isPasswordChanged(decoded.iat*1000))
         return next(new AppError('User recently changed password! Please log in again.', 401));
     request.user=currentUser;
@@ -70,7 +82,7 @@ exports.forgotPassword=catchAsyncError(async (request,response,next)=>{
         return next(new AppError('No such user existe with this email',404));
     //Get reset token from User Model
     const resetToken=await user.createPasswordResetToken();
-    console.log(resetToken);
+    // console.log(resetToken);
     await user.save({validateBeforeSave:false});    
     // next();
     const resetUrl=`${request.protocol}://${request.get('host')}/api/v1/users/resetPassword/${resetToken}`;
@@ -96,7 +108,7 @@ exports.forgotPassword=catchAsyncError(async (request,response,next)=>{
 exports.resetPassword=catchAsyncError(async(request,response,next)=>{
     //Hash the resetToken which we got in the url ...to compare it to the passwordResetToken(hashed already) in the database
     const hashedToken=crypto.createHash('sha256').update(request.params.token).digest('hex');
-    console.log(hashedToken);
+    // console.log(hashedToken);
     const user=await User.findOne({passwordResetToken:hashedToken,passwordResetExpire:{$gt:Date.now()}});
     if(!user)
         return next(new AppError('Token is invalid or expired',400));
@@ -108,9 +120,31 @@ exports.resetPassword=catchAsyncError(async(request,response,next)=>{
     await user.save();//running the validators this time because we wanna check if user's provided passwords match or not
     //Logging the user in by giving the token
     //we also change the passwordChangedAt in the database in the meantime ...to keep track of passwordChanged times 
-    const token=signToken(user._id);
-    response.status(200).json({
-        status:'success',
-        token
-    });
+    // const token=signToken(user._id);
+    // response.status(200).json({
+    //     status:'success',
+    //     token
+    // });
+    sendToken(user._id,null,200,response);
+});
+exports.updatePassword=catchAsyncError(async(request,response,next)=>{
+    //check if user is logged in and authorized to perform this action
+    const user=await User.findById(request.user._id).select('+password');
+    //Confirm user's current password 
+    if(!await user.correctPassword(request.body.passwordCurrent,user.password))
+        return next(new AppError('Your current password is wrong',401));
+    //If all these pass then update password
+    user.password=request.body.password;
+    user.passwordConfirm=request.body.passwordConfirm;
+    await user.save();//here we will not disable validators because we wanna confirm the passwords
+    /* In this type of methods where we have to save details or update passwords we can't use findOneandUpdate or findByIdandUpdate 
+    because ..they ccan;t access 'this' in the schema and mongoose middlewares */
+    
+    //At last assigning token to the user and logging him/her in
+    // const token=signToken(user._id);
+    // response.status(200).json({
+    //     status:'success',
+    //     token
+    // });
+    sendToken(user._id,null,200,response);
 });
