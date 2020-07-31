@@ -39,9 +39,15 @@ const userSchema = new mongoose.Schema({
     },
     passwordChangedAt:Date,
     passwordResetToken:String,
-    passwordResetExpire:Date
+    passwordResetExpire:Date,
+    active:{
+        type:Boolean,
+        default:true,
+        select:false
+    }
 });
 //Document Middleware section
+
 userSchema.pre('save',async function(next){
     //It will only proceed if user's password is modified else it will return
     if(!this.isModified('password'))    return next();
@@ -57,6 +63,13 @@ userSchema.pre('save',function(next){
     /*one second early because...sometimes the token is issued to the user before saving..the document,
     which affects the passwordChangedAt ...which will not gonna user log in */
     this.passwordChangedAt=Date.now()-1000;
+    next();
+});
+
+//Query Middleware section
+
+userSchema.pre(/^find/,function(next){
+    this.find({active:{$ne:false}});
     next();
 });
 //Instance methods section
