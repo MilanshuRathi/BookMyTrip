@@ -1,6 +1,4 @@
 const mongoose=require('mongoose');
-const { compareSync } = require('bcryptjs');
-const { response } = require('express');
 const User=require(`${__dirname}/../models/userModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const AppError=require(`${__dirname}/../utils/AppError`);

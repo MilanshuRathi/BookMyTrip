@@ -8,6 +8,16 @@ const sendEmail=require(`${__dirname}/../utils/email`);
 //Util Methods
 const sendToken=(id,data,statusCode,response)=>{
     const token=jwt.sign({id},process.env.JWT_SECRET_KEY,{expiresIn:process.env.JWT_EXPIREIN});    
+    const cookieOptions={
+        expires:new Date(Date.now()+process.env.JWT_COOKIE_EXPIREIN*24*60*60*1000),        
+        httpOnly:true
+    };
+    if(process.env.NODE_ENV==='production')
+        cookieOptions.secure=true;
+    //Remove password of  user from output
+    if(data)
+        data.password=undefined;
+    response.cookie('jwt',token,cookieOptions);
     response.status(statusCode).json({
         status:'success',
         token,
