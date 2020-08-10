@@ -8,8 +8,8 @@ process.on('uncaughtException',err=>{
 });
 const app = require(`${__dirname}/app`);
 //Configuring connection with Database
-process.env.DB = process.env.DB.replace('<PASSWORD>', process.env.DB_PASSWD);
-mongoose.connect(process.env.DB, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true }).then(() => console.log('Connection to DB is successful'));
+const url= process.env.DB.replace('<PASSWORD>', process.env.DB_PASSWD);
+mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true }).then(() => console.log('Connection to DB is successful'));
 //In case to connect with local database
 // mongoose.connect(process.env.DB_LOCAL,{useNewUrlParser:true,useCreateIndex:true,useFindAndModify:true}).then(con=>console.log(con)).catch(err=>console.log(err));
 const port = process.env.PORT || 3000;
