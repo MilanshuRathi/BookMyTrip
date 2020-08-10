@@ -114,6 +114,14 @@ tourSchema.pre('save',function(next){
     this.slug=slugify(this.name,{lower:true});
     next();
 });
+//Query middleware 
+tourSchema.pre(/^find/,function(next){
+    this.populate({
+        path:'guides',
+        select:'-__v -passwordChangedAt'
+    });
+    next();
+});
 //Mongoose have 4 types of middlewares 1)Document 2)Query 3)Aggregation Middleware 4)Model middleware
 
 //Making a model out of a schema...which is basically a wrapping of schema to deal with CRUD operations
