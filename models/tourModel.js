@@ -73,7 +73,36 @@ const tourSchema=new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
-    startDates:[Date]//start dates are different dates for tour start dates of a tour different times
+    startDates:[Date],//start dates are different dates for tour start dates of a tour different times
+    startLocation:{
+        type:{
+            type:String,
+            default:'Point',
+            enum:['Point'],
+        },
+        coordinates:[Number],
+        address:String,
+        description:String
+    },
+    locations:[
+        {
+            type:{
+                type:String,
+                default:'Point',
+                enum:['Point'],
+            },
+            coordinates:[Number],
+            address:String,
+            description:String,
+            day:Number
+        }
+    ],
+    guides:[
+        {
+            type:mongoose.Schema.ObjectId,
+            ref:'User'
+        }
+    ]
 },{toJSON:{virtuals:true}},{toObject:{virtuals:true}});
 
 //Virtual property ...it doesnt get stored in database but we can use it ..for some purpose...and we cant use it for queries
