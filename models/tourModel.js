@@ -75,6 +75,8 @@ const tourSchema=new mongoose.Schema({
     },
     startDates:[Date],//start dates are different dates for tour start dates of a tour different times
     startLocation:{
+        //GeoJson here we have to use to things atleast type and coordinates and in type we have to mention type of data with a level nested and default values and values that are accepted
+        //But this will not create a seperate document it will only create an object ...to make  documents..we need to make array of such objects as shown in Location field
         type:{
             type:String,
             default:'Point',
@@ -125,5 +127,4 @@ tourSchema.pre(/^find/,function(next){
 //Mongoose have 4 types of middlewares 1)Document 2)Query 3)Aggregation Middleware 4)Model middleware
 
 //Making a model out of a schema...which is basically a wrapping of schema to deal with CRUD operations
-const Tour=mongoose.model('Tour',tourSchema);
-module.exports=Tour;
+module.exports=mongoose.model('Tour',tourSchema);;
