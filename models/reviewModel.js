@@ -16,13 +16,29 @@ const reviewSchema=new mongoose.Schema({
     },
     tour:{
         type:mongoose.Schema.ObjectId,
-        refer:'Tour',
+        ref:'Tour',
         required:[true,'A review must belong to a tour']
     },
     user:{
         type:mongoose.Schema.ObjectId,
-        refer:'User',
+        ref:'User',
         required:[true,'A review must belong to a user']
     }    
 },{toJSON:{virtuals:true},toObject:{virtuals:true}});
+//Document middlewares
+
+
+//Query middlewares 
+reviewSchema.pre(/^find/,function(next){
+    //We have to call populate  for each field of schema we want to get populated
+    this.populate({
+        path:'tour',
+        select:'name'
+    });
+    this.populate({
+        path:'user',
+        select:'name photo'
+    });
+    next();
+});
 module.exports=mongoose.model('Review',reviewSchema);
