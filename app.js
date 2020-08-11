@@ -9,6 +9,7 @@ const hpp=require('hpp');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
+const reviewRouter = require(`${__dirname}/routes/reviewRoutes`);
 const AppError = require(`${__dirname}/utils/AppError`);
 const globalErrorHandler = require(`${__dirname}/utils/errorHandler`);
 // 1) Global Middlewares
@@ -46,6 +47,7 @@ app.use('/api',limiting);
 //Routes for diff endpoints
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews',reviewRouter);
 app.all('*', (request, response, next) => {
     next(new AppError(`Can\'t find ${request.originalUrl} on this server`, 404));
 });
