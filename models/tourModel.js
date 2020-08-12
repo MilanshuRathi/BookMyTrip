@@ -108,7 +108,12 @@ const tourSchema=new mongoose.Schema({
 },{toJSON:{virtuals:true}},{toObject:{virtuals:true}});
 
 //Virtual property ...it doesnt get stored in database but we can use it ..for some purpose...and we cant use it for queries
-tourSchema.virtual('durationWeeks').get(function(){
+tourSchema.virtual('reviews',{    
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id'    
+});
+tourSchema.virtual('durationWeeks').get(function(){    
     return this.duration/7;
 });
 //Doccument Middleware and here this worked only because we are saving a new document ....'this' will not refer to the document while updating/insertingMany documents
