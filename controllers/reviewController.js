@@ -1,6 +1,6 @@
 const Review=require(`${__dirname}/../models/reviewModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
-// const AppError=require(`${__dirname}/../utils/AppError`);
+const factory=require(`${__dirname}/../utils/factoryFunctions`);
 
 //Methods
 exports.getAllReviews=catchAsyncError(async (request,response,next)=>{
@@ -32,3 +32,4 @@ exports.createReview=catchAsyncError(async (request,response,next)=>{
         }
     }); 
 });
+exports.deleteReview=factory.deleteOne(Review);

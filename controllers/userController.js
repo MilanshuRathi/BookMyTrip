@@ -3,7 +3,7 @@ const User=require(`${__dirname}/../models/userModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const AppError=require(`${__dirname}/../utils/AppError`);
 const APIfeatures = require(`${__dirname}/../utils/APIfeatures`);
-
+const factory=require(`${__dirname}/../utils/factoryFunctions`);
 //Util Methods
 const filterObj=(obj,...arr)=>{
  const mp={},newObj={};
@@ -67,11 +67,4 @@ exports.deleteMe=catchAsyncError(async(request,response,next)=>{
         data:null
     });    
 });
-exports.deleteUserById=(request,response)=>{
-    response.status(500).json({
-        status:'error',
-        data:{
-            message:'This route is not updated yet'
-        }
-    });
-};
+exports.deleteUserById=factory.deleteOne(User);
