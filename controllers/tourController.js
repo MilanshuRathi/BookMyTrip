@@ -1,6 +1,7 @@
 const Tour = require(`${__dirname}/../models/tourModel`);
 const catchAsyncError = require(`${__dirname}/../utils/catchAsyncError`);
 const factory=require(`${__dirname}/../utils/factoryFunctions`);
+const AppError=require(`${__dirname}/../utils/AppError`);
 exports.top5ToursAliasFunc = (request, response, next) => {
     request.query.limit = '5';
     request.query.sort = '-ratingsAverage,price';
@@ -39,6 +40,51 @@ exports.getTourStats = catchAsyncError(async (request, response, next) => {
         status: 'success',
         data: {
             stats
+        }
+    });
+});
+exports.getTourWithin=catchAsyncError(async (request,response,next)=>{
+    const {distance,latlong,unit}=request.params;
+    const [lat,long]=latlong.split(',');
+    const radius=unit==='mi'?distance/3963.2:distance/6378.1;    
+    if(!lat||!long)
+        return next(new AppError('Please provide lattitude and longitude in format lat,lng',404));
+    //to query for geospacial data our db must have indexes of that field
+    const tours=await Tour.find({
+        startLocation:{$geoWithin:{$centerSphere:[[long,lat],radius]}}
+    });
+    response.status(200).json({
+        status:'success',
+        results:tours.length,
+        data:{
+            tours
+        }
+    });
+});
+exports.getDistances=catchAsyncError(async (request,response,next)=>{
+    const {latlong,unit}=request.params;
+    const [lat,long]=latlong.split(',');
+    const multiplier=unit==='mi'?0.000621371 :0.001;    
+    if(!lat||!long)
+        return next(new AppError('Please provide lattitude and longitude in format lat,lng',404));
+    //to query for geospacial data our db must have indexes of that field
+    const distances=await Tour.aggregate([
+        {
+            $geoNear:{
+                near:{
+                    type:'Point',
+                    coordinates:[long*1,lat*1],
+                },
+                distanceField:'distance',
+                distanceMultiplier:multiplier
+            }
+        }
+    ]);
+    response.status(200).json({
+        status:'success',
+        results:distances.length,
+        data:{
+            distances
         }
     });
 });
