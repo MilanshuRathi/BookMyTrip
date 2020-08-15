@@ -1,5 +1,6 @@
 //review/rating/createdAt/ref to Tour /ref to USer
 const mongoose=require('mongoose');
+const Tour=require(`${__dirname}/tourModel`);
 const reviewSchema=new mongoose.Schema({
     review:{        
         type:String,        
@@ -25,6 +26,8 @@ const reviewSchema=new mongoose.Schema({
         required:[true,'A review must belong to a user']
     }    
 },{toJSON:{virtuals:true}},{toObject:{virtuals:true}});
+//indexes 
+reviewSchema.index({tour:1,user:1},{unique:true}); 
 //Document middlewares
 
 //Query middlewares 
@@ -35,5 +38,48 @@ reviewSchema.pre(/^find/,function(next){
         select:'name photo'
     });
     next();
+});
+
+//static method of Model
+reviewSchema.statics.calcAverageRating=async function(tourId){
+    const stats=await this.aggregate([
+        {
+            $match:{tour:tourId}
+        },
+        {
+            $group:{
+                _id:'$tour',
+                ratingCount:{$sum:1},
+                avgRating:{$avg:'$rating'}
+            }    
+        }
+    ]);
+    if(stats.length>0){
+        await Tour.findByIdAndUpdate(tourId,{
+            ratingsQuantity:stats[0].ratingCount,
+            ratingsAverage:stats[0].avgRating
+        });
+    }
+    else{
+        await Tour.findByIdAndUpdate(tourId,{
+            ratingsQuantity:0,
+            ratingsAverage:4.5
+        });
+    }
+};
+reviewSchema.post('save',function(doc){
+    //this.constructor points to the current Model
+    this.constructor.calcAverageRating(doc.tour);    
+});
+
+//updating ratings when updating or deleting a review
+reviewSchema.pre(/^findOneAnd/,async function(next){ 
+    //storing the review on the query to change the ratingsAverage and ratingsQuantity in the post middlewares   
+    this.reviewObject=await this.findOne();//saving current document to this for post query
+    next();
+});
+reviewSchema.post(/^findOneAnd/,async function(){
+    // await this.findOne(); does NOT work here because query has already executed   
+    await this.reviewObject.constructor.calcAverageRating(this.reviewObject.tour);
 });
 module.exports=mongoose.model('Review',reviewSchema);

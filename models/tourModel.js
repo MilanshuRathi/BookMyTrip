@@ -31,6 +31,7 @@ const tourSchema=new mongoose.Schema({
         default:4.5,
         min:[1,"A rating must be greater than 0"],
         max:[5,"A rating must be less than 6"],        
+        set:val=>val.toFixed(1)
     },
     ratingsQuantity:{
         type:Number,
@@ -106,7 +107,10 @@ const tourSchema=new mongoose.Schema({
         }
     ]
 },{toJSON:{virtuals:true}},{toObject:{virtuals:true}});
-
+//indexing
+tourSchema.index({price:1,ratingsAverage:-1});
+tourSchema.index({slug:1});
+tourSchema.index({startLocation:'2dsphere'});
 //Virtual property ...it doesnt get stored in database but we can use it ..for some purpose...and we cant use it for queries
 tourSchema.virtual('reviews',{    
     ref: 'Review',
@@ -129,6 +133,7 @@ tourSchema.pre(/^find/,function(next){
     });
     next();
 });
+
 //Mongoose have 4 types of middlewares 1)Document 2)Query 3)Aggregation Middleware 4)Model middleware
 
 //Making a model out of a schema...which is basically a wrapping of schema to deal with CRUD operations
