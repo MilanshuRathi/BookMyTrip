@@ -122,7 +122,7 @@ tourSchema.pre('save',function(next){
     next();
 });
 //Query middleware 
-tourSchema.pre(/^find/,function(next){}    
+tourSchema.pre(/^find/,function(next){    
     this.populate({
         path:'guides',
         select:'-__v -passwordChangedAt'
