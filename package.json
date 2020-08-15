@@ -4,7 +4,7 @@
   "description": "Learning all node.js,express,mongoDB,mongoose",
   "main": "app.js",
   "scripts": {
-    "build": "node ./dev-data/data/import-data.js --import",
+    "build": "node import-data.js --import",
     "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js"
   },
