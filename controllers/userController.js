@@ -1,8 +1,6 @@
-const mongoose=require('mongoose');
 const User=require(`${__dirname}/../models/userModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const AppError=require(`${__dirname}/../utils/AppError`);
-const APIfeatures = require(`${__dirname}/../utils/APIfeatures`);
 const factory=require(`${__dirname}/../utils/factoryFunctions`);
 //Util Methods
 const filterObj=(obj,...arr)=>{
@@ -16,26 +14,7 @@ const filterObj=(obj,...arr)=>{
     return newObj;
 }
 
-
 //Exporting methods
-exports.getAllUsers=catchAsyncError(async (request,response,next)=>{
-    const users=await User.find();
-    response.status(200).json({
-        status:'success',
-        results:users.length,
-        data:{
-            users
-        }
-    });    
-});
-exports.getUserById=(request,response)=>{
-    response.status(500).json({
-        status:'error',
-        data:{
-            message:'This route is not updated yet'
-        }
-    });
-};
 exports.updateMe=catchAsyncError(async (request,response,next)=>{
     if(request.body.password||request.body.passwordConfirm)
         return next(new AppError('This route is not for password updates,Please use /updatePassword',400));
@@ -59,5 +38,7 @@ exports.deleteMe=catchAsyncError(async(request,response,next)=>{
         data:null
     });    
 });
+exports.getAllUsers=factory.getAll(User);
+exports.getUserById=factory.getOne(User);
 exports.updateUserById=factory.updateOne(User);
 exports.deleteUserById=factory.deleteOne(User);
