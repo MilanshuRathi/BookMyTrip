@@ -15,6 +15,10 @@ const filterObj=(obj,...arr)=>{
 }
 
 //Exporting methods
+exports.getMe=(request,response,next)=>{
+    request.params.id=request.user.id;
+    next();
+}
 exports.updateMe=catchAsyncError(async (request,response,next)=>{
     if(request.body.password||request.body.passwordConfirm)
         return next(new AppError('This route is not for password updates,Please use /updatePassword',400));
