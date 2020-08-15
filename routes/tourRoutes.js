@@ -13,7 +13,7 @@ router.use('/:tourId/reviews',reviewRouter);
 //Handles get,patch,delete request specific to id
 router.route('/:id')
 .get(tourController.getTourById)
-.patch(tourController.updateTourById)
+.patch(authController.protect,authController.restrictTo('admin','lead-guide'),tourController.updateTourById)
 .delete(authController.protect,authController.restrictTo('admin','lead-guide'),tourController.deleteTourById);
 
 module.exports=router;

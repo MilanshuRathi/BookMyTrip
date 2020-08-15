@@ -17,7 +17,7 @@ router.route('/')
 //Handles get,patch,delete request for specific user
 router.route('/:id')
 .get(userController.getUserById)
-.patch(userController.updateUserById)
+.patch(authController.protect,authController.restrictTo('admin'),userController.updateUserById)
 .delete(authController.protect,authController.restrictTo('admin'),userController.deleteUserById);
 
 module.exports=router;
