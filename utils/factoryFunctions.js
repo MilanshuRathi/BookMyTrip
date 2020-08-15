@@ -47,7 +47,7 @@ exports.getOne=(Model,populateOptions)=>catchAsyncError(async (request, response
 exports.getAll=Model=>catchAsyncError(async (request, response, next) => {                     
     let filter=null;
     if(request.params.tourId) filter={tour:request.params.tourId};
-    const doc = await new APIfeatures(filter?Model.find(filter):Model, request.query).filter().sort().fields().pagination().query;    
+    const doc = await new APIfeatures(filter?Model.find(filter):Model, request.query).filter().sort().fields().pagination().query;//.explain(); explain is to give a representation of analysis of query
     response.status(200).json({
         status: 'success',
         results: doc.length,
