@@ -5,11 +5,14 @@ const authController=require(`${__dirname}/../controllers/authController`);
 //Route handlers
 //POST /:tourId/reviews , /reviews
 //GET /:tourId/reviews , /reviews
+//Need authentication for all routes 
+router.use(authController.protect);
+
 router.route('/')
 .get(reviewController.getAllReviews)
-.post(authController.protect,authController.restrictTo('user'),reviewController.setTourandUser,reviewController.createReview);
+.post(authController.restrictTo('user'),reviewController.setTourandUser,reviewController.createReview);
 router.route('/:id')
 .get(reviewController.getReviewById)
-.patch(authController.protect,authController.restrictTo('user'),reviewController.updateReview)
-.delete(authController.protect,authController.restrictTo('user'),reviewController.deleteReview);
+.patch(authController.restrictTo('user','admin'),reviewController.updateReview)
+.delete(authController.restrictTo('user','admin'),reviewController.deleteReview);
 module.exports=router;

@@ -4,10 +4,10 @@ const tourController=require(`${__dirname}/../controllers/tourController`);
 const authController=require(`${__dirname}/../controllers/authController`);
 const reviewRouter=require(`${__dirname}/../routes/reviewRoutes`);
 router.route('/top-5-tours').get(tourController.top5ToursAliasFunc,tourController.getAllTours);
-router.route('/tour-stats/:year').get(tourController.getTourStats);
+router.route('/tour-stats/:year').get(authController.protect,authController.restrictTo('admin','lead-guide','guide'),tourController.getTourStats);
 router.route('/')
-.get(authController.protect,tourController.getAllTours)
-.post(tourController.createTour);
+.get(tourController.getAllTours)
+.post(authController.protect,authController.restrictTo('admin','lead-guide'),tourController.createTour);
 
 router.use('/:tourId/reviews',reviewRouter);
 //Handles get,patch,delete request specific to id
