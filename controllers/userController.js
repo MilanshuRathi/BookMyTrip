@@ -52,14 +52,6 @@ exports.updateMe=catchAsyncError(async (request,response,next)=>{
         }
     });
 });
-exports.updateUserById=(request,response)=>{
-    response.status(500).json({
-        status:'error',
-        data:{
-            message:'This route is not updated yet'
-        }
-    });
-};
 exports.deleteMe=catchAsyncError(async(request,response,next)=>{
     await User.findByIdAndUpdate(request.user._id,{active:false});
     response.status(204).json({
@@ -67,4 +59,5 @@ exports.deleteMe=catchAsyncError(async(request,response,next)=>{
         data:null
     });    
 });
+exports.updateUserById=factory.updateOne(User);
 exports.deleteUserById=factory.deleteOne(User);

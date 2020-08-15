@@ -1,7 +1,6 @@
 const Review=require(`${__dirname}/../models/reviewModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const factory=require(`${__dirname}/../utils/factoryFunctions`);
-
 //Methods
 exports.getAllReviews=catchAsyncError(async (request,response,next)=>{
     let filter={};
@@ -15,21 +14,11 @@ exports.getAllReviews=catchAsyncError(async (request,response,next)=>{
         }
     });
 });
-exports.createReview=catchAsyncError(async (request,response,next)=>{
+exports.setTourandUser=(request,response,next)=>{
     if(!request.body.tour) request.body.tour=request.params.tourId;
     if(!request.body.user) request.body.user=request.user.id;
-    const newReview=await Review.create({
-        review:request.body.review,
-        rating:request.body.rating,
-        createdAt:request.body.createdAt,
-        tour:request.body.tour,
-        user:request.body.user
-    });
-    response.status(201).json({
-        status:'success',
-        data:{
-            review:newReview
-        }
-    }); 
-});
+    next();
+}
+exports.createReview=factory.createOne(Review);
+exports.updateReview=factory.updateOne(Review);
 exports.deleteReview=factory.deleteOne(Review);
