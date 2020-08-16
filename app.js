@@ -8,6 +8,7 @@ const helmet=require('helmet');
 const mongoSanitize=require('express-mongo-sanitize');
 const xss=require('xss-clean');
 const hpp=require('hpp');
+const cookieParser=require('cookie-parser');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
@@ -33,7 +34,7 @@ const limiting=rateLimit({
 });
 //Bodyparser parser reading data from body to req.body
 app.use(express.json());
-
+app.use(cookieParser());//to parse cookies
 //Sanitizing mongo queries if any from request
 app.use(mongoSanitize());
 //Sanitizing xss scripts 
