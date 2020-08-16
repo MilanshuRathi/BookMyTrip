@@ -1,4 +1,6 @@
+const path=require('path');
 const express = require('express');
+const pug=require('pug');
 const morgan = require('morgan');
 const app = express();
 const rateLimit=require('express-rate-limit');
@@ -10,9 +12,14 @@ const hpp=require('hpp');
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
 const reviewRouter = require(`${__dirname}/routes/reviewRoutes`);
+const viewRouter=require(`${__dirname}/routes/viewRoutes`);
 const AppError = require(`${__dirname}/utils/AppError`);
 const globalErrorHandler = require(`${__dirname}/utils/errorHandler`);
+//Setting up view engine
+app.set('view engine','pug');
+app.set('views',path.join(__dirname,'views'));
 // 1) Global Middlewares
+app.use(express.static(path.join(__dirname,'public')));
 //Set security headers
 app.use(helmet());
 //Logging middleware
@@ -45,6 +52,7 @@ app.use(hpp({
 //Limits no. of requests from same ip
 app.use('/api',limiting);
 //Routes for diff endpoints
+app.use('/',viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews',reviewRouter);

@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 //Handler for Synchronous code expections (Uncaught Exceptions)
 process.on('uncaughtException',err=>{
-    console.log(`UNCAUGHT EXCEPTION...\n${err.name} : ${err.message}\nShutting down the app`);
+    console.log(`UNCAUGHT EXCEPTION...\n${err.name} : ${err.message}\nShutting down the app`);    
     process.exit(1);
 });
 const app = require(`${__dirname}/app`);
