@@ -1,3 +1,4 @@
+const {promisify}=require('util');
 const jwt=require('jsonwebtoken');
 const crypto=require('crypto');
 const User = require(`${__dirname}/../models/userModel`);
@@ -63,11 +64,13 @@ exports.protect=catchAsyncError(async (request,response,next)=>{
     let token;    
     //Get Token and check if it's there
     if(request.headers.authorization&&request.headers.authorization.startsWith('Bearer'))
-        token=request.headers.authorization.split(' ')[1];    
+        token=request.headers.authorization.split(' ')[1]; 
+    else if(request.cookies.jwt)
+        token=request.cookies.jwt;   
     if(!token)
         return next(new AppError('You are not logged in!!..Please login to get access.',401));
     //Verify the token and check if it is manipulated or not
-    const decoded=await jwt.verify(token,process.env.JWT_SECRET_KEY);    
+    const decoded=await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY);    
     //decoded:-this will return the payload of user to whom the token was alloted which contains the user's id.
     //Now,Check if user still exists or not 
     const currentUser=await User.findById(decoded.id);
@@ -78,6 +81,26 @@ exports.protect=catchAsyncError(async (request,response,next)=>{
         return next(new AppError('User recently changed password! Please log in again.', 401));
     request.user=currentUser;
     next();
+});
+//Only to check if user is logged in or not
+exports.isLoggedin=catchAsyncError(async (request,response,next)=>{    
+    //Check if cookie has a jwt or not ..if not then user is not logged in    
+    if(request.cookies.jwt){
+        const decoded=await promisify(jwt.verify)(request.cookies.jwt,process.env.JWT_SECRET_KEY);    
+    //decoded:-this will return the payload of user to whom the token was alloted which contains the user's id.
+    //Now,Check if user still exists or not 
+        const currentUser=await User.findById(decoded.id);
+        if(!currentUser)
+            return next();
+    //Now,check if user changed his password after ...allotment of JWT or not...if yes..then deny the accesss     
+        if(currentUser.isPasswordChanged(decoded.iat*1000))
+            return next();         
+        if(!response.locals.user)               
+            response.locals.user=currentUser;//assiging user to request.locals for the pug templates to check if user is logged in or not 
+        next();
+    } 
+    else       
+        next();
 });
 exports.restrictTo=(...roles)=>(request,response,next)=>{
     //roles=['admin],'lead-guid'];
