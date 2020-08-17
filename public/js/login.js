@@ -1,20 +1,38 @@
-// const axios=require('axios');
-const login=async (email,password)=>{    
+import axios from 'axios'
+import { showAlert } from './alerts';
+export const login=async (email,password)=>{    
     try{
-        const token=await axios({
+        const response=await axios({
             method:'POST',
-            url:'http://127.0.0.1:3000/api/v1/users/login',
+            url:`${window.location.protocol}//${window.location.host}/api/v1/users/login`,
             data:{
                 email,password
             }
-        });        
+        }); 
+        console.log(response.data);
+        if(response.data.status==='success'){
+            showAlert('success','Hello there, Just logging you in!');            
+            window.setTimeout(()=>{location.assign('/')},1000);
+        }       
     } 
     catch(err){
-        console.log(err.response.data);
+        showAlert('error',err.response.data.message);
     }
-}
-document.querySelector('form').addEventListener('submit',event=>{
-    event.preventDefault();
-    const email=document.getElementById('email').value,password=document.getElementById('password').value;    
-    login(email,password);
-});
+};
+export const logout=async ()=>{
+    try{
+        const response=await axios({
+            method:'GET',
+            url:`${window.location.protocol}//${window.location.host}/api/v1/users/logout`,
+        });               
+        if(response.data.status==='success'){            
+            location.reload(true);
+            location.assign('/login');
+            //marked as true to force the server to reload the page....otherwise it will get reloaded from browser cache
+        }
+    }
+    catch(err){
+        console.log(err.response);
+        showAlert('error','Error logging out,Try again..');
+    }    
+};
