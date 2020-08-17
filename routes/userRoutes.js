@@ -6,6 +6,7 @@ const authController=require(`${__dirname}/../controllers/authController`);
 //No authentication required for these routes
 router.post('/signUp',authController.signUp);
 router.post('/login',authController.login);
+router.get('/logout',authController.logout);
 router.post('/forgotPassword',authController.forgotPassword);
 router.patch('/resetPassword/:token',authController.resetPassword);
 
