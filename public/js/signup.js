@@ -6,7 +6,7 @@ export const signUp=async(name,email,password,passwordConfirm)=>{
             method:'POST',
             url:`${window.location.protocol}//${window.location.host}/api/v1/users/signUp`,
             data:{
-                name,email,password,passwordConfirm,photo:'default.jpg'
+                name,email,password,passwordConfirm
             }
         });
         if(response.data.status==='success'){     

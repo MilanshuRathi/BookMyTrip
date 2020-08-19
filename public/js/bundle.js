@@ -8471,8 +8471,7 @@ var logout = /*#__PURE__*/function () {
             response = _context2.sent;
 
             if (response.data.status === 'success') {
-              location.reload(true);
-              location.assign('/login'); //marked as true to force the server to reload the page....otherwise it will get reloaded from browser cache
+              location.reload(true); //marked as true to force the server to reload the page....otherwise it will get reloaded from browser cache
             }
 
             _context2.next = 11;
@@ -8532,8 +8531,7 @@ var signUp = /*#__PURE__*/function () {
                 name: name,
                 email: email,
                 password: password,
-                passwordConfirm: passwordConfirm,
-                photo: 'default.jpg'
+                passwordConfirm: passwordConfirm
               }
             });
 
@@ -8631,7 +8629,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var updateUser = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(name, email) {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data) {
     var response;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -8642,10 +8640,7 @@ var updateUser = /*#__PURE__*/function () {
             return (0, _axios.default)({
               method: 'PATCH',
               url: "".concat(window.location.protocol, "//").concat(window.location.host, "/api/v1/users/updateMe"),
-              data: {
-                name: name,
-                email: email
-              }
+              data: data
             });
 
           case 3:
@@ -8667,7 +8662,7 @@ var updateUser = /*#__PURE__*/function () {
     }, _callee, null, [[0, 7]]);
   }));
 
-  return function updateUser(_x, _x2) {
+  return function updateUser(_x) {
     return _ref.apply(this, arguments);
   };
 }();
@@ -8675,7 +8670,7 @@ var updateUser = /*#__PURE__*/function () {
 exports.updateUser = updateUser;
 
 var updatePassword = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(passwordCurrent, password, passwordConfirm) {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data) {
     var response;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -8686,11 +8681,7 @@ var updatePassword = /*#__PURE__*/function () {
             return (0, _axios.default)({
               method: 'PATCH',
               url: "".concat(window.location.protocol, "//").concat(window.location.host, "/api/v1/users/updatePassword"),
-              data: {
-                passwordCurrent: passwordCurrent,
-                password: password,
-                passwordConfirm: passwordConfirm
-              }
+              data: data
             });
 
           case 3:
@@ -8712,7 +8703,7 @@ var updatePassword = /*#__PURE__*/function () {
     }, _callee2, null, [[0, 7]]);
   }));
 
-  return function updatePassword(_x3, _x4, _x5) {
+  return function updatePassword(_x2) {
     return _ref2.apply(this, arguments);
   };
 }();
@@ -9024,21 +9015,25 @@ if (signUpForm) {
 if (userDetailsUpdate) {
   userDetailsUpdate.addEventListener('submit', /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event) {
-      var name, email;
+      var userForm;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               event.preventDefault();
-              document.querySelector('.updateSettingBtn').textContent = 'Updating...';
-              name = document.getElementById('name').value, email = document.getElementById('email').value;
-              _context.next = 5;
-              return (0, _updateSettings.updateUser)(name, email);
+              userForm = new FormData();
+              userForm.append('name', document.getElementById('name').value);
+              userForm.append('email', document.getElementById('email').value);
+              userForm.append('photo', document.getElementById('photo').files[0]);
+              document.querySelector('.updateSettingBtn').textContent = 'Updating...'; // console.log(userForm);              
 
-            case 5:
+              _context.next = 8;
+              return (0, _updateSettings.updateUser)(userForm);
+
+            case 8:
               document.querySelector('.updateSettingBtn').textContent = 'Save settings';
 
-            case 6:
+            case 9:
             case "end":
               return _context.stop();
           }
@@ -9064,7 +9059,11 @@ if (passwordForm) {
               event.preventDefault();
               passwordCurrent = document.getElementById('password-current').value, password = document.getElementById('password').value, passwordConfirm = document.getElementById('password-confirm').value;
               _context2.next = 5;
-              return (0, _updateSettings.updatePassword)(passwordCurrent, password, passwordConfirm);
+              return (0, _updateSettings.updatePassword)({
+                passwordCurrent: passwordCurrent,
+                password: password,
+                passwordConfirm: passwordConfirm
+              });
 
             case 5:
               document.querySelector('.updatePasswdBtn').textContent = 'Save password';
@@ -9116,7 +9115,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43127" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43677" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

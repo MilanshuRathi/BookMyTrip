@@ -27,9 +27,13 @@ if(signUpForm){
 if(userDetailsUpdate){
     userDetailsUpdate.addEventListener('submit',async event=>{
         event.preventDefault();
-        document.querySelector('.updateSettingBtn').textContent='Updating...';        
-        const name=document.getElementById('name').value,email=document.getElementById('email').value;
-        await updateUser(name,email);
+        const userForm=new FormData();
+        userForm.append('name',document.getElementById('name').value);
+        userForm.append('email',document.getElementById('email').value);
+        userForm.append('photo',document.getElementById('photo').files[0]);
+        document.querySelector('.updateSettingBtn').textContent='Updating...';  
+        // console.log(userForm);              
+        await updateUser(userForm);
         document.querySelector('.updateSettingBtn').textContent='Save settings';
     });
 }
@@ -38,7 +42,7 @@ if(passwordForm){
         document.querySelector('.updatePasswdBtn').textContent='Updating...';
         event.preventDefault();
         const passwordCurrent=document.getElementById('password-current').value,password=document.getElementById('password').value,passwordConfirm=document.getElementById('password-confirm').value;            
-        await updatePassword(passwordCurrent,password,passwordConfirm);
+        await updatePassword({passwordCurrent,password,passwordConfirm});
         document.querySelector('.updatePasswdBtn').textContent='Save password';
     });
 }

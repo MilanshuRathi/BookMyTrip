@@ -25,9 +25,8 @@ export const logout=async ()=>{
             method:'GET',
             url:`${window.location.protocol}//${window.location.host}/api/v1/users/logout`,
         });               
-        if(response.data.status==='success'){            
+        if(response.data.status==='success'){                        
             location.reload(true);
-            location.assign('/login');
             //marked as true to force the server to reload the page....otherwise it will get reloaded from browser cache
         }
     }
