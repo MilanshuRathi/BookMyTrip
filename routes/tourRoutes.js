@@ -15,7 +15,7 @@ router.use('/:tourId/reviews',reviewRouter);
 //Handles get,patch,delete request specific to id
 router.route('/:id')
 .get(tourController.getTourById)
-.patch(authController.protect,authController.restrictTo('admin','lead-guide'),tourController.updateTourById)
+.patch(authController.protect,authController.restrictTo('admin','lead-guide'),tourController.uploadTourImages,tourController.resizeTourImages,tourController.updateTourById)
 .delete(authController.protect,authController.restrictTo('admin','lead-guide'),tourController.deleteTourById);
 
 module.exports=router;
