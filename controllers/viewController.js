@@ -43,5 +43,8 @@ exports.getSignUpPage=(request,response,next)=>{
         response.redirect('/');
 };
 exports.getAccount=(request,response)=>{
-    response.status(200).render('account',{title:'My account'});
+    if(response.locals.user)
+        response.status(200).render('account',{title:'My account'});
+    else    
+        response.redirect('/login');
 };

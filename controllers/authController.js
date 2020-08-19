@@ -32,10 +32,7 @@ exports.signUp = catchAsyncError(async(request, response, next) => {
         name:request.body.name,
         email:request.body.email,
         password:request.body.password,
-        passwordConfirm:request.body.passwordConfirm,
-        passwordChangedAt:request.body.passwordChangedAt,
-        role:request.body.role,
-        photo:request.body.photo
+        passwordConfirm:request.body.passwordConfirm        
     });    
      sendToken(newUser._id,newUser,201,response);           
 });
@@ -50,7 +47,7 @@ exports.login=catchAsyncError(async (request,response,next)=>{
 });
 exports.logout=(request,response)=>{
     response.cookie('jwt','loggedOut',{
-        expires:new Date(Date.now()+10*1000),
+        expires:new Date(Date.now()+5*1000),
         httpOnly:true
     });    
     response.status(200).json({
@@ -69,6 +66,8 @@ exports.protect=catchAsyncError(async (request,response,next)=>{
         token=request.cookies.jwt;   
     if(!token)
         return next(new AppError('You are not logged in!!..Please login to get access.',401));
+    else if(token==='loggedOut')
+        return response.redirect('/login');
     //Verify the token and check if it is manipulated or not
     const decoded=await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY);    
     //decoded:-this will return the payload of user to whom the token was alloted which contains the user's id.
