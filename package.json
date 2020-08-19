@@ -7,8 +7,8 @@
     "build": "node import-data.js --import",
     "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
-    "watch:js":"parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
-    "build:js":"parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
+    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
+    "build:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
   "author": "Milanshu Rathi",
   "license": "ISC",
@@ -25,9 +25,11 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.25",
-    "morgan": "^1.10.0", 
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "nodemailer": "^6.4.10",
     "pug": "^3.0.0",
+    "sharp": "^0.25.4",
     "slugify": "^1.4.4",
     "validator": "^13.1.1",
     "xss-clean": "^0.1.1"
