@@ -8,7 +8,7 @@ const AppError=require(`${__dirname}/../utils/AppError`);
 exports.alerts=(request,response,next)=>{
     const {alert}=request.query;    
     if(alert==='booking')
-        response.locals.alert='Your booking was successfull!,Please check your email for confirmation\nIf your booking does\'nt show up here immediately,please come back later'
+        response.locals.alert='Your booking was successfull!\nIf your booking does\'nt show up here immediately,please come back later'
     next();
 }
 exports.getOverview=catchAsyncError(async(request,response,next)=>{    
