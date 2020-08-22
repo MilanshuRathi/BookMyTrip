@@ -23,3 +23,11 @@ process.on('unhandledRejection',err=>{
         process.exit(1);
     });
 });
+//For SIGTERM signal which heroku gives to site every 24 hrs to keep it in a good state..b
+// has a bad impact sometimes request are unhandled and they just keep hanged ...so we need to shut down the server gracefully
+process.on('SIGTERM',()=>{
+    console.log('SIGTERM SIGNAL!!! Shutting down gracefully');
+    server.close(()=>{
+        console.log('Webapp processes terminated');
+    }); 
+});

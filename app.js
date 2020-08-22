@@ -2,7 +2,6 @@ const path=require('path');
 const express = require('express');
 const pug=require('pug');
 const morgan = require('morgan');
-const app = express();
 const rateLimit=require('express-rate-limit');
 const helmet=require('helmet');
 const mongoSanitize=require('express-mongo-sanitize');
@@ -18,6 +17,12 @@ const viewRouter=require(`${__dirname}/routes/viewRoutes`);
 const bookingRouter=require(`${__dirname}/routes/bookingRoutes`);
 const AppError = require(`${__dirname}/utils/AppError`);
 const globalErrorHandler = require(`${__dirname}/utils/errorHandler`);
+
+//Start the app
+const app = express();
+//Trust proxies to get x-forwarder-proto check if protocol is http or https (only for sites using proxy such as heroku)
+app.enable('trust proxy');
+
 //Setting up view engine
 app.set('view engine','pug');
 app.set('views',path.join(__dirname,'views'));

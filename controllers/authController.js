@@ -1,19 +1,19 @@
 const {promisify}=require('util');
 const jwt=require('jsonwebtoken');
 const crypto=require('crypto');
+const { request } = require('http');
 const User = require(`${__dirname}/../models/userModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const AppError=require(`${__dirname}/../utils/AppError`);
 const Email=require(`${__dirname}/../utils/email`);
 //Util Methods
-const sendToken=(id,user,statusCode,response)=>{
+const sendToken=(id,user,statusCode,request,response)=>{
     const token=jwt.sign({id},process.env.JWT_SECRET_KEY,{expiresIn:process.env.JWT_EXPIREIN});    
     const cookieOptions={
         expires:new Date(Date.now()+process.env.JWT_COOKIE_EXPIREIN*24*60*60*1000),        
-        httpOnly:true
-    };
-    if(process.env.NODE_ENV==='production')
-        cookieOptions.secure=true;
+        httpOnly:true,
+        secure:request.secure||request.headers['x-forwarded-proto']==='https'
+    };    
     //Remove password of  user from output
     if(user)
         user.password=undefined;
@@ -34,7 +34,7 @@ exports.signUp = catchAsyncError(async(request, response, next) => {
         passwordConfirm:request.body.passwordConfirm        
     });    
     new Email(newUser,`${request.protocol}://${request.get('host')}/me`).sendWelcome();       
-    sendToken(newUser._id,newUser,201,response);         
+    sendToken(newUser._id,newUser,201,request,response);         
 });
 exports.login=catchAsyncError(async (request,response,next)=>{
     let {email,password}=request.body;
@@ -43,7 +43,7 @@ exports.login=catchAsyncError(async (request,response,next)=>{
     const user=await User.findOne({email}).select('+password');           
     if(!user||!await user.correctPassword(password,user.password))
         return next(new AppError('Incorrect email or password',401));       
-    sendToken(user._id,null,200,response);
+    sendToken(user._id,null,200,request,response);
 });
 exports.logout=(request,response)=>{
     response.cookie('jwt','loggedOut',{
@@ -150,7 +150,7 @@ exports.resetPassword=catchAsyncError(async(request,response,next)=>{
     await user.save();//running the validators this time because we wanna check if user's provided passwords match or not
     //Logging the user in by giving the token
     //we also change the passwordChangedAt in the database in the meantime ...to keep track of passwordChanged times     
-    sendToken(user._id,null,200,response);
+    sendToken(user._id,null,200,request,response);
 });
 exports.updatePassword=catchAsyncError(async(request,response,next)=>{
     //check if user is logged in and authorized to perform this action
@@ -166,5 +166,5 @@ exports.updatePassword=catchAsyncError(async(request,response,next)=>{
     because ..they ccan;t access 'this' in the schema and mongoose middlewares */
     
     //At last assigning token to the user and logging him/her in   
-    sendToken(user._id,null,200,response);
+    sendToken(user._id,null,200,request,response);
 });
