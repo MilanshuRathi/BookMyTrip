@@ -4,8 +4,7 @@ const crypto=require('crypto');
 const User = require(`${__dirname}/../models/userModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const AppError=require(`${__dirname}/../utils/AppError`);
-const sendEmail=require(`${__dirname}/../utils/email`);
-
+const Email=require(`${__dirname}/../utils/email`);
 //Util Methods
 const sendToken=(id,user,statusCode,response)=>{
     const token=jwt.sign({id},process.env.JWT_SECRET_KEY,{expiresIn:process.env.JWT_EXPIREIN});    
@@ -34,13 +33,14 @@ exports.signUp = catchAsyncError(async(request, response, next) => {
         password:request.body.password,
         passwordConfirm:request.body.passwordConfirm        
     });    
-     sendToken(newUser._id,newUser,201,response);           
+    new Email(newUser,`${request.protocol}://${request.get('host')}/me`).sendWelcome();       
+    sendToken(newUser._id,newUser,201,response);         
 });
 exports.login=catchAsyncError(async (request,response,next)=>{
     let {email,password}=request.body;
     if(!email||!password)
         return next(new AppError('Please provide your email and password',400));    
-    const user=await User.findOne({email}).select('+password');    
+    const user=await User.findOne({email}).select('+password');           
     if(!user||!await user.correctPassword(password,user.password))
         return next(new AppError('Incorrect email or password',401));       
     sendToken(user._id,null,200,response);
@@ -121,15 +121,10 @@ exports.forgotPassword=catchAsyncError(async (request,response,next)=>{
     const resetToken=await user.createPasswordResetToken();
     // console.log(resetToken);
     await user.save({validateBeforeSave:false});    
-    // next();
-    const resetUrl=`${request.protocol}://${request.get('host')}/api/v1/users/resetPassword/${resetToken}`;
-    const message=`Forgot your passsword?\nClick on this link to reset your password:- ${resetUrl}\nIf you did'nt forgot your password then please ignore this email`;
-    try{
-        await sendEmail({
-            email:user.email,
-            subject:'Your password reset link (valid for 10 min only)',
-            message
-        });
+    // next();      
+    try{        
+        const resetUrl=`${request.protocol}://${request.get('host')}/resetPassword/${resetToken}`;
+        new Email(user,resetUrl).sendResetPassword();
         response.status(200).json({
             status:'success',
             message:'Token mail is sent.'
