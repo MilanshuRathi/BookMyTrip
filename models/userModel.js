@@ -49,8 +49,8 @@ const userSchema = new mongoose.Schema({
         select:false
     }
 });
+//Creating indexes and virtual properties 
 //Document Middleware section
-
 userSchema.pre('save',async function(next){
     //It will only proceed if user's password is modified else it will return
     if(!this.isModified('password'))    return next();
