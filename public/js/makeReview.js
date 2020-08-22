@@ -10,8 +10,11 @@ export const submitReview=async (tourId,review,rating)=>{
                 rating
             }
         });
-        if(response.data.status==='success')
+        if(response.data.status==='success'){
             showAlert('success','Review Submitted');
+            window.setTimeout(()=>{location.reload()},1000);
+        }
+            
     }
     catch(err){                
         showAlert('error','Error in submitting review');
