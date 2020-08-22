@@ -11,7 +11,7 @@ exports.getCheckoutSession=catchAsyncError(async (request,response,next)=>{
     const session=await stripe.checkout.sessions.create({
         payment_method_types:['card'],        
         // success_url:`${request.protocol}://${request.get('host')}/my-bookings/?tour=${request.params.tourId}&user=${request.user.id}&price=${tour.price}`,
-        success_url:`${request.protocol}://${request.get('host')}/my-bookings`,
+        success_url:`${request.protocol}://${request.get('host')}/my-bookings?alert=booking`,
         cancel_url:`${request.protocol}://${request.get('host')}/tour/${tour.slug}`,
         customer_email:request.user.email,
         client_reference_id:request.params.tourId,

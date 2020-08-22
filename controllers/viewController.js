@@ -1,8 +1,16 @@
+const { request } = require("express");
+
 const Tour=require(`${__dirname}/../models/tourModel`);
 const Booking=require(`${__dirname}/../models/bookingModel`);
 const Review=require(`${__dirname}/../models/reviewModel`);
 const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`)
 const AppError=require(`${__dirname}/../utils/AppError`);
+exports.alerts=(request,response,next)=>{
+    const {alert}=request.query;    
+    if(alert==='booking')
+        response.locals.alert='Your booking was successfull!,Please check your email for confirmation\nIf your booking does\'nt show up here immediately,please come back later'
+    next();
+}
 exports.getOverview=catchAsyncError(async(request,response,next)=>{    
     //1) get tours data from Tour model
     const tours=await Tour.find();//await Tour.find();    
