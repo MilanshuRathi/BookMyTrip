@@ -9,6 +9,7 @@ const xss=require('xss-clean');
 const hpp=require('hpp');
 const compression=require('compression');
 const cookieParser=require('cookie-parser');
+const cors=require('cors');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
@@ -28,6 +29,17 @@ app.set('view engine','pug');
 app.set('views',path.join(__dirname,'views'));
 // 1) Global Middlewares
 app.use(express.static(path.join(__dirname,'public')));
+
+app.use(cors());//Allowing every other domain to send requests to this domain
+//Allow Access-Control-Allow-Origin
+//it can be used when api is hosted on different domain and frontend application is on different domain e.g api.natours.com as api and natours-exolore.com as frontend
+//we can also restrict the domain names to allow them to send requests using origin option in cors
+// Example app.use(cors({origin:'https://www.natours.com'})) 
+
+//Options is a preflight request done by browsers whenever someone makes a cors request(other than GET,POST e.g PUT,PATCH,DELETE)
+//the browser checks if the server is ready for such requests or not...by making a preflight request ..before the real request 
+app.options('*',cors());
+//We can also restrict options request for some routes by app.options('/api/v1',cors());
 //Set security headers
 app.use(helmet());
 app.use(compression());
