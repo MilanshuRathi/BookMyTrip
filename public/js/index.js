@@ -60,8 +60,7 @@ if(userDetailsUpdate){
         userForm.append('name',document.getElementById('name').value);
         userForm.append('email',document.getElementById('email').value);
         userForm.append('photo',document.getElementById('photo').files[0]);
-        document.querySelector('.updateSettingBtn').textContent='Updating...';  
-        // console.log(userForm);              
+        document.querySelector('.updateSettingBtn').textContent='Updating...';          
         await updateUser(userForm);
         document.querySelector('.updateSettingBtn').textContent='Save settings';
     });

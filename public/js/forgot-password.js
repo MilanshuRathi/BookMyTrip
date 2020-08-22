@@ -4,7 +4,7 @@ export const forgotPassword=async (email)=>{
     try{
         const response=await axios({
             method:'POST',
-            url:`${window.location.protocol}//${window.location.host}/api/v1/users/forgotPassword`,
+            url:'/api/v1/users/forgotPassword',
             data:{
                 email
             }
@@ -20,7 +20,7 @@ export const resetPassword=async (password,passwordConfirm,token)=>{
     try{
         const response=await axios({
             method:'PATCH',
-            url:`${window.location.protocol}//${window.location.host}/api/v1/users/resetPassword/${token}`,
+            url:'/api/v1/users/resetPassword/${token}',
             data:{
                 password,passwordConfirm
             }

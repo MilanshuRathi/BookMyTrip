@@ -4,7 +4,7 @@ export const login=async (email,password)=>{
     try{
         const response=await axios({
             method:'POST',
-            url:`${window.location.protocol}//${window.location.host}/api/v1/users/login`,
+            url:'/api/v1/users/login',
             data:{
                 email,password
             }
@@ -22,15 +22,14 @@ export const logout=async ()=>{
     try{
         const response=await axios({
             method:'GET',
-            url:`${window.location.protocol}//${window.location.host}/api/v1/users/logout`,
+            url:'/api/v1/users/logout',
         });               
         if(response.data.status==='success'){                        
             location.reload(true);
             //marked as true to force the server to reload the page....otherwise it will get reloaded from browser cache
         }
     }
-    catch(err){
-        console.log(err.response);
+    catch(err){        
         showAlert('error','Error logging out,Try again..');
     }    
 };

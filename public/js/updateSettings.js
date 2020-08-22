@@ -4,7 +4,7 @@ export const updateUser=async (data)=>{
     try{
         const response=await axios({
             method:'PATCH',
-            url:`${window.location.protocol}//${window.location.host}/api/v1/users/updateMe`,
+            url:'/api/v1/users/updateMe',
             data
         });
         if(response.data.status==='success'){
@@ -20,7 +20,7 @@ export const updatePassword=async (data)=>{
     try{
         const response=await axios({
             method:'PATCH',
-            url:`${window.location.protocol}//${window.location.host}/api/v1/users/updatePassword`,
+            url:'/api/v1/users/updatePassword',
             data
         });
         if(response.data.status==='success')
