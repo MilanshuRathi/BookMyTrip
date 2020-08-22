@@ -1,9 +1,11 @@
 //Importing Express application from app.js
 require('dotenv').config();
 const mongoose = require('mongoose');
+const e = require('express');
 //Handler for Synchronous code expections (Uncaught Exceptions)
 process.on('uncaughtException',err=>{
     console.log(`UNCAUGHT EXCEPTION...\n${err.name} : ${err.message}\nShutting down the app`);    
+    // console.log(err);
     process.exit(1);
 });
 const app = require(`${__dirname}/app`);
@@ -19,6 +21,7 @@ const server=app.listen(port, () => { console.log(`Server running on port:${port
 //Handler for Asynchronous/Promises Exceptions
 process.on('unhandledRejection',err=>{
     console.log(`UNHANDLED REJECTION ...\n${err.name} : ${err.message}\nShutting down the app`);
+    console.log(err);
     server.close(()=>{
         process.exit(1);
     });
