@@ -83,8 +83,8 @@ if(forgotForm){
 if(resetForm){
     resetForm.addEventListener('submit',event=>{
         event.preventDefault();
-        const urlPart=location.pathname;
-        resetPassword(document.getElementById('password').value,document.getElementById('passwordConfirm').value,urlPart.substr(urlPart.lastIndexOf('/')+1));
+        const urlPart=location.pathname.substr(location.pathname.lastIndexOf('/')+1);        
+        resetPassword(document.getElementById('password').value,document.getElementById('passwordConfirm').value,urlPart);
     });
 }
 const logOutLink=document.querySelector('.nav__el--logout');
