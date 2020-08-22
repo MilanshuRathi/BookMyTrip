@@ -17,7 +17,7 @@ exports.updateOne=Model=>catchAsyncError(async (request, response, next)=>{
     response.status(200).json({
         status: 'success',
         data: {
-            "updatedDoc":doc
+            "document":doc
         }
     });    
 });
@@ -47,6 +47,7 @@ exports.getOne=(Model,populateOptions)=>catchAsyncError(async (request, response
 exports.getAll=Model=>catchAsyncError(async (request, response, next) => {                     
     let filter=null;
     if(request.params.tourId) filter={tour:request.params.tourId};
+    else if(request.params.userId) filter={user:request.params.userId};
     const doc = await new APIfeatures(filter?Model.find(filter):Model, request.query).filter().sort().fields().pagination().query;//.explain(); explain is to give a representation of analysis of query
     response.status(200).json({
         status: 'success',

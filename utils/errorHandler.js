@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const AppError = require(`${__dirname}/AppError`);
 const sendDevErr = (error,request, response) => {
+    // console.log(error);
     //API ERRPR
     if(request.originalUrl.startsWith('/api'))
         response.status(error.statusCode).json({
