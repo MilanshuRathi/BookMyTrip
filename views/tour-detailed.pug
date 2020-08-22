@@ -1,7 +1,9 @@
 extends base
 block append head
     script(src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js')
-    link(href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet')    
+    link(href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet') 
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+    script(src="https://js.stripe.com/v3/")  
 block content
     section.section-header
         .header__hero
@@ -75,31 +77,47 @@ block content
     section.section-reviews
         .reviews
             each review in tour.reviews
-                .reviews__card
-                    .reviews__avatar
-                        img.reviews__avatar-img(src=`/img/users/${review.user.photo}`, alt=`${review.user.name}`)
-                        h6.reviews__user #{review.user.name}
-                    p.reviews__text #{review.review}
-                    .reviews__rating
-                        each star in [1,2,3,4,5]
-                            svg.reviews__star(class=`reviews__star--${Math.floor(review.rating)>=star?'active':'inactive'}`)
-                                use(xlink:href='/img/icons.svg#icon-star')
-                        //- svg.reviews__star.reviews__star--active
-                        //-     use(xlink:href='/img/icons.svg#icon-star')
-                        //- svg.reviews__star.reviews__star--active
-                        //-     use(xlink:href='/img/icons.svg#icon-star')
-                        //- svg.reviews__star.reviews__star--active
-                        //-     use(xlink:href='/img/icons.svg#icon-star')
-                        //- svg.reviews__star.reviews__star--active
-                        //-     use(xlink:href='/img/icons.svg#icon-star')
+                - if(review.user!=null)
+                    .reviews__card
+                        .reviews__avatar
+                            img.reviews__avatar-img(src=`/img/users/${review.user.photo}`, alt=`${review.user.name}`)
+                            h6.reviews__user #{review.user.name}
+                        p.reviews__text #{review.review}
+                        .reviews__rating
+                            each star in [1,2,3,4,5]
+                                svg.reviews__star(class=`reviews__star--${Math.floor(review.rating)>=star?'active':'inactive'}`)
+                                    use(xlink:href='/img/icons.svg#icon-star')                        
 
-    section.section-cta
-        .cta
-            .cta__img.cta__img--logo
-                img(src='/img/logo-white.png', alt='Natours logo')
-            img.cta__img.cta__img--1(src=`/img/tours/${tour.images[0]}`, alt='')
-            img.cta__img.cta__img--2(src=`/img/tours/${tour.images[1]}`, alt='')
-            .cta__content
-                h2.heading-secondary What are you waiting for?
-                p.cta__text 10 days. 1 adventure. Infinite memories. Make it yours today!
-                button.btn.btn--green.span-all-rows Book tour now!
+    - if(isBooked)
+        section.section-cta
+            main.main
+                .review-form
+                    h2.heading-secondary.ma-bt-lg Wanna review the tour?
+                    form#reviewForm.form
+                        .form__group
+                            label.form__label(for='review') How was the tour?
+                            textarea#reviewBox.form__input(placeholder='Enter your review', required)
+                        .form__group.ma-bt-md
+                            label.form__label(for='rating') Rate us 
+                            br
+                            i(class='fa fa-star unchecked' id='one' style='font-size:3em')
+                            i(class='fa fa-star unchecked' id='two' style='font-size:3em')
+                            i(class='fa fa-star unchecked' id='three' style='font-size:3em')
+                            i(class='fa fa-star unchecked' id='four' style='font-size:3em')
+                            i(class='fa fa-star unchecked' id='five' style='font-size:3em')                                              
+                        .form__group
+                            button.btn.btn--green.span-all-rows#reviewButton(data-tour-id=`${tour.id}`) Submit Review
+    - else
+        section.section-cta
+            .cta
+                .cta__img.cta__img--logo
+                    img(src='/img/logo-white.png', alt='Natours logo')
+                img.cta__img.cta__img--1(src=`/img/tours/${tour.images[0]}`, alt='')
+                img.cta__img.cta__img--2(src=`/img/tours/${tour.images[1]}`, alt='')
+                .cta__content
+                    h2.heading-secondary What are you waiting for?
+                    p.cta__text 10 days. 1 adventure. Infinite memories. Make it yours today!
+                    - if(user)
+                        button.btn.btn--green.span-all-rows#bookingButton(data-tour-id=`${tour.id}`) Book tour now!
+                    - else 
+                        a(href='/login').btn.btn--green.span-all-rows Log in to Book tour

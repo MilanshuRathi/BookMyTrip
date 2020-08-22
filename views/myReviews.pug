@@ -1,0 +1,42 @@
+extends base      
+block content
+    main.main
+        .card-container
+            each review in reviews 
+                .card
+                    .card__header
+                        .card__picture
+                            .card__picture-overlay &nbsp;
+                            img.card__picture-img(src=`img/tours/${review.tour.imageCover}`, alt=`${review.tour.name}`)
+                        h3.heading-tertirary
+                            span #{review.tour.name}
+
+                    .card__details
+                        h4.card__sub-heading #{review.tour.difficulty} #{review.tour.duration}-day tour
+                        p.card__text #{review.tour.summary}
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='img/icons.svg#icon-map-pin')
+                            span #{review.tour.startLocation.description}
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='img/icons.svg#icon-calendar')
+                            span #{review.tour.startDates[0].toLocaleString('en-us',{month:'long',year:'numeric'})}
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='img/icons.svg#icon-flag')
+                            span #{review.tour.locations.length} stops
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='img/icons.svg#icon-user')
+                            span #{review.tour.maxGroupSize} people
+
+                    .card__footer
+                        .reviews__card(style='background-color:#ffffff')
+                            .reviews__avatar                                
+                                h6.reviews__user #{review.user.name}'s review
+                            p.reviews__text #{review.review}
+                            .reviews__rating
+                                each star in [1,2,3,4,5]
+                                    svg.reviews__star(class=`reviews__star--${Math.floor(review.rating)>=star?'active':'inactive'}`)
+                                        use(xlink:href='/img/icons.svg#icon-star')   

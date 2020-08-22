@@ -1,5 +1,10 @@
 extends base
-
+block searchForm
+    form.nav__search#searchTours
+        input.nav__search-input(type='text' placeholder='Search tours')
+        button(disabled).nav__search-btn
+            svg
+                use(xlink:href='/img/icons.svg#icon-search')        
 block content
     main.main
         .card-container
@@ -34,7 +39,7 @@ block content
 
                     .card__footer
                         p
-                            span.card__footer-value $#{tour.price}
+                            span.card__footer-value ₹#{tour.price}
                             | 
                             span.card__footer-text per person
                         p.card__ratings
