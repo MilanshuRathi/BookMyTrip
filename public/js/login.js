@@ -8,8 +8,7 @@ export const login=async (email,password)=>{
             data:{
                 email,password
             }
-        }); 
-        console.log(response.data);
+        });         
         if(response.data.status==='success'){
             showAlert('success','Hello there, Just logging you in!');            
             window.setTimeout(()=>{location.assign('/')},1000);

@@ -7,8 +7,10 @@ export const updateUser=async (data)=>{
             url:`${window.location.protocol}//${window.location.host}/api/v1/users/updateMe`,
             data
         });
-        if(response.data.status==='success')
+        if(response.data.status==='success'){
             showAlert('success','Data updated Successfully!');                    
+            window.setTimeout(()=>location.assign('/me'),1500);
+        }            
     }
     catch(err){
         showAlert('error',err.response.data.message);
