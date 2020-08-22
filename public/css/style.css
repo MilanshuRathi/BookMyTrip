@@ -674,11 +674,17 @@ body::-webkit-scrollbar{
   width: 2rem;
   margin-right: 1px;
 }
-.reviews__star--active {
+.reviews__star--active{
   fill: #55c57a;
   fill-rule: evenodd;
 }
-.reviews__star--inactive {
+.checked{
+  color:#55c57a;
+}
+.unchecked{
+  color:#bbb;
+}
+.reviews__star--inactive{
   fill: #bbb;
 }
 
@@ -800,7 +806,11 @@ body::-webkit-scrollbar{
   margin: 0 auto;
   padding: 0 8rem;
 }
-
+.body_link{
+  text-decoration: none;
+  font-size:1.5vh;
+  color: #444;
+}
 .footer {
   background-color: #f7f7f7;
   padding: 6rem 4rem 3rem 4rem;
@@ -1086,7 +1096,7 @@ body::-webkit-scrollbar{
 }
 
 .card {
-  border-radius: 3px;
+  border-radius: 5px;
   overflow: hidden;
   -webkit-box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.1);
   box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.1);
@@ -1232,6 +1242,15 @@ body::-webkit-scrollbar{
 .login-form {
   margin: 0 auto;
   max-width: 55rem;
+  background-color: #fff;
+  -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
+  padding: 5rem 7rem;
+  border-radius: 5px;
+}
+.review-form {
+  margin: 0 auto;
+  max-width: 90rem;
   background-color: #fff;
   -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
