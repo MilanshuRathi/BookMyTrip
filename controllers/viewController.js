@@ -46,8 +46,7 @@ exports.getTour=catchAsyncError(async(request,response,next)=>{
 });
 exports.getBookings=catchAsyncError(async (request,response,next)=>{    
     if(response.locals.user){
-        const bookings=await Booking.find({user:request.user.id});   
-        // console.log(bookings); 
+        const bookings=await Booking.find({user:request.user.id});            
         let tours=[];
         for(let i=0;i<bookings.length;i++){
             tours.push(Tour.findById(bookings[i].tour));
@@ -60,15 +59,7 @@ exports.getBookings=catchAsyncError(async (request,response,next)=>{
 });
 exports.getReviews=catchAsyncError(async (request,response,next)=>{    
     if(response.locals.user){
-        const reviews=await Review.find({user:request.user.id}).populate('tour');   
-        // console.log(bookings);    
-        // response.status(200).json({
-        //     status:'success',
-        //     data:{
-        //         reviews
-        //     }
-        // });   
-
+        const reviews=await Review.find({user:request.user.id}).populate('tour');                     
         response.status(200).render('myReviews',{title:'My Reviews',reviews});        
     }        
     else    

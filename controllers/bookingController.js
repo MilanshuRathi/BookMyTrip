@@ -5,8 +5,7 @@ const catchAsyncError=require(`${__dirname}/../utils/catchAsyncError`);
 const factory=require(`${__dirname}/../utils/factoryFunctions`);
 exports.getCheckoutSession=catchAsyncError(async (request,response,next)=>{
     // 1)Get the tour to be booked
-    const tour=await Tour.findById(request.params.tourId);    
-    // console.log(tour);
+    const tour=await Tour.findById(request.params.tourId);        
     // Create booking session
     const session=await stripe.checkout.sessions.create({
         payment_method_types:['card'],        

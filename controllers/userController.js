@@ -17,8 +17,7 @@ const factory=require(`${__dirname}/../utils/factoryFunctions`);
 //     }
 // });
 const multerStorage=multer.memoryStorage();//Doing it because we need to resize image thats why we will store img in buffer 
-const multerFilter=(request,file,cb)=>{
-    // console.log(file);
+const multerFilter=(request,file,cb)=>{    
     file.mimetype.startsWith('image')?cb(null,true):cb(new AppError('NOT an image,Please upload an image only',404,false));
 }
 const upload=multer({storage:multerStorage,fileFilter:multerFilter});//initializing oject to upload files and setting path of storage
@@ -52,8 +51,7 @@ exports.getMe=(request,response,next)=>{
     request.params.id=request.user.id;
     next();
 }
-exports.updateMe=catchAsyncError(async (request,response,next)=>{  
-    // console.log(request.file);  
+exports.updateMe=catchAsyncError(async (request,response,next)=>{       
     if(request.body.password||request.body.passwordConfirm)
         return next(new AppError('This route is not for password updates,Please use /updatePassword',400));
     //Filer user data ..to remove data other than required to terminate any malicious code 

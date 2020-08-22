@@ -119,7 +119,6 @@ exports.forgotPassword=catchAsyncError(async (request,response,next)=>{
         return next(new AppError('No such user existe with this email',404));
     //Get reset token from User Model
     const resetToken=await user.createPasswordResetToken();
-    // console.log(resetToken);
     await user.save({validateBeforeSave:false});    
     // next();      
     try{        
@@ -139,8 +138,7 @@ exports.forgotPassword=catchAsyncError(async (request,response,next)=>{
 });
 exports.resetPassword=catchAsyncError(async(request,response,next)=>{
     //Hash the resetToken which we got in the url ...to compare it to the passwordResetToken(hashed already) in the database
-    const hashedToken=crypto.createHash('sha256').update(request.params.token).digest('hex');
-    // console.log(hashedToken);
+    const hashedToken=crypto.createHash('sha256').update(request.params.token).digest('hex');    
     const user=await User.findOne({passwordResetToken:hashedToken,passwordResetExpire:{$gt:Date.now()}});
     if(!user)
         return next(new AppError('Token is invalid or expired',400));

@@ -7,8 +7,7 @@ const AppError=require(`${__dirname}/../utils/AppError`);
 
 
 const multerStorage=multer.memoryStorage();//Doing it because we need to resize image thats why we will store img in buffer 
-const multerFilter=(request,file,cb)=>{
-    // console.log(file);
+const multerFilter=(request,file,cb)=>{    
     file.mimetype.startsWith('image')?cb(null,true):cb(new AppError('NOT an image,Please upload an image only',404,false));
 }
 const upload=multer({storage:multerStorage,fileFilter:multerFilter});//initializing oject to upload files and setting path of storage
