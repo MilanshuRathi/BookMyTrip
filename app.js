@@ -14,6 +14,7 @@ const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
 const reviewRouter = require(`${__dirname}/routes/reviewRoutes`);
 const viewRouter=require(`${__dirname}/routes/viewRoutes`);
+const bookingRouter=require(`${__dirname}/routes/bookingRoutes`);
 const AppError = require(`${__dirname}/utils/AppError`);
 const globalErrorHandler = require(`${__dirname}/utils/errorHandler`);
 //Setting up view engine
@@ -57,6 +58,7 @@ app.use('/',viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews',reviewRouter);
+app.use('/api/v1/bookings',bookingRouter); 
 app.all('*', (request, response, next) => {
     next(new AppError(`Can\'t find ${request.originalUrl} on this server`, 404));
 });
