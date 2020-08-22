@@ -18,8 +18,7 @@ const server=app.listen(port, () => { console.log(`Server running on port:${port
 
 //Handler for Asynchronous/Promises Exceptions
 process.on('unhandledRejection',err=>{
-    console.log(`UNHANDLED REJECTION ...\n${err.name} : ${err.message}\nShutting down the app`);
-    console.log(err);
+    console.log(`UNHANDLED REJECTION ...\n${err.name} : ${err.message}\nShutting down the app`);    
     server.close(()=>{
         process.exit(1);
     });
