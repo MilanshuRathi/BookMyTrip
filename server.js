@@ -1,11 +1,9 @@
 //Importing Express application from app.js
 require('dotenv').config();
 const mongoose = require('mongoose');
-const e = require('express');
 //Handler for Synchronous code expections (Uncaught Exceptions)
 process.on('uncaughtException',err=>{
     console.log(`UNCAUGHT EXCEPTION...\n${err.name} : ${err.message}\nShutting down the app`);    
-    // console.log(err);
     process.exit(1);
 });
 const app = require(`${__dirname}/app`);
