@@ -1,5 +1,7 @@
 const express=require('express');
 const router=express.Router();
+const bookingRouter=require(`${__dirname}/../routes/bookingRoutes`);
+// const reviewRouter=require(`${__dirname}/../routes/reviewRoutes`);
 const userController=require(`${__dirname}/../controllers/userController`);
 const authController=require(`${__dirname}/../controllers/authController`);
 //routes(requests) according to events 
@@ -10,6 +12,9 @@ router.get('/logout',authController.logout);
 router.post('/forgotPassword',authController.forgotPassword);
 router.patch('/resetPassword/:token',authController.resetPassword);
 
+//To get bookings and reviews accoding to users
+router.use('/:userId/bookings',bookingRouter);
+// router.use('/:userId/reviews',reviewRouter);
 //Authentication is required for all the routes after this
 router.use(authController.protect);
 router.patch('/updatePassword',authController.updatePassword);
