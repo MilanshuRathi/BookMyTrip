@@ -16,6 +16,7 @@ const userRouter = require(`${__dirname}/routes/userRoutes`);
 const reviewRouter = require(`${__dirname}/routes/reviewRoutes`);
 const viewRouter=require(`${__dirname}/routes/viewRoutes`);
 const bookingRouter=require(`${__dirname}/routes/bookingRoutes`);
+const bookingController=require(`${__dirname}/controllers/bookingController`);
 const AppError = require(`${__dirname}/utils/AppError`);
 const globalErrorHandler = require(`${__dirname}/utils/errorHandler`);
 
@@ -52,6 +53,9 @@ const limiting=rateLimit({
     windowMs:60*60*1000,
     message:'Too many requests,Please try again later in an hour!' 
 });
+//here stripe gives data in string format and 
+// does'nt want us to parse it in json format that's why we handled this post request before app.use(express.json())
+app.post('/webhook-checkout',express.raw({type:'application/json'}),bookingController.webhookCheckout);
 //Bodyparser parser reading data from body to req.body
 app.use(express.json());
 app.use(cookieParser());//to parse cookies

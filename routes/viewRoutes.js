@@ -7,7 +7,7 @@ const authController=require(`${__dirname}/../controllers/authController`);
 router.get('/me',authController.protect,viewController.getAccount);
 router.get('/my-bookings',authController.protect,viewController.getBookings);
 router.get('/my-reviews',authController.protect,viewController.getReviews);
-router.get('/',bookingController.createBookingCheckout,authController.isLoggedin,viewController.getOverview);
+router.get('/',authController.isLoggedin,viewController.getOverview);
 router.use(authController.isLoggedin);
 router.get('/tour/:tourSlug',viewController.getTour,viewController.checkBooked);
 router.get('/login',viewController.getLoginPage);
