@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const AppError = require(`${__dirname}/AppError`);
-const sendDevErr = (error,request, response) => {
-    // console.log(error);
+const sendDevErr = (error,request, response) => {    
     //API ERRPR
     if(request.originalUrl.startsWith('/api'))
         response.status(error.statusCode).json({
@@ -22,8 +21,7 @@ const handleCastErrorDB = (error) => {
     return new AppError(message, 400);
 }
 const handleValidationErrorDB = (error) => {
-    const errorString = Object.values(error.errors).map(el => el.message).join(',');
-    // console.log(e);
+    const errorString = Object.values(error.errors).map(el => el.message).join(',');    
     message = `Invalid input data: ${errorString}`;
     return new AppError(message, 400);
 }
