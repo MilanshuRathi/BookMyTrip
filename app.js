@@ -8,6 +8,7 @@ const helmet=require('helmet');
 const mongoSanitize=require('express-mongo-sanitize');
 const xss=require('xss-clean');
 const hpp=require('hpp');
+const compression=require('compression');
 const cookieParser=require('cookie-parser');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
@@ -24,6 +25,7 @@ app.set('views',path.join(__dirname,'views'));
 app.use(express.static(path.join(__dirname,'public')));
 //Set security headers
 app.use(helmet());
+app.use(compression());
 //Logging middleware
 if (process.env.NODE_ENV === 'development')
     app.use(morgan('dev'));
