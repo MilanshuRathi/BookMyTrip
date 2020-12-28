@@ -163,7 +163,7 @@ exports.updatePassword=catchAsyncError(async(request,response,next)=>{
     user.passwordConfirm=request.body.passwordConfirm;
     await user.save();//here we will not disable validators because we wanna confirm the passwords
     /* In this type of methods where we have to save details or update passwords we can't use findOneandUpdate or findByIdandUpdate 
-    because ..they ccan;t access 'this' in the schema and mongoose middlewares */
+    because ..they can;t access 'this' in the schema and mongoose middlewares */
     
     //At last assigning token to the user and logging him/her in   
     sendToken(user._id,null,200,request,response);
