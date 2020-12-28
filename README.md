@@ -1,4 +1,4 @@
-# Natours
+# BookMyTrip 
 
 An application which provides tour and travel packages around the globe,here is the [live version](https://natours-explore.herokuapp.com/)
 
