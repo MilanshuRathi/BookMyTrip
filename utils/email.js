@@ -9,7 +9,7 @@ module.exports=class Email{
         this.from=`Milanshu Rathi ${process.env.EMAIL_FROM}`;
     }
     newTransport(){
-        if(process.env.NODE_ENV==='production'){
+        // if(process.env.NODE_ENV==='production'){
             //Sendgrid
             return nodemailer.createTransport({
                 service:'gmail',
@@ -18,15 +18,15 @@ module.exports=class Email{
                     pass:process.env.PASSWORD
                 }
             });
-        }
-        return nodemailer.createTransport({
-            host:process.env.MAILTRAP_HOST,
-            port:process.env.MAILTRAP_PORT,
-            auth:{
-                user:process.env.MAILTRAP_USERNAME,
-                pass:process.env.MAILTRAP_PASSWD
-            }
-        });
+        // }
+        // return nodemailer.createTransport({
+        //     host:process.env.MAILTRAP_HOST,
+        //     port:process.env.MAILTRAP_PORT,
+        //     auth:{
+        //         user:process.env.MAILTRAP_USERNAME,
+        //         pass:process.env.MAILTRAP_PASSWD
+        //     }
+        // });
     }
     async send(template,subject){        
         //1) Render HTML based on pug template 
