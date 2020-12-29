@@ -47,7 +47,7 @@ module.exports=class Email{
         await this.newTransport().sendMail(mailOptions);
     }
     async sendWelcome(){
-        await this.send('welcome','Welcome to Natours!');
+        await this.send('welcome','Welcome to BookMyTrip!');
     }
     async sendResetPassword(){
         await this.send('passwordReset','Password Reset Link(valid for just 10 minutes)')

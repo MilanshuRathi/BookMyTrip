@@ -10,7 +10,7 @@ export const signUp=async(name,email,password,passwordConfirm)=>{
             }
         });
         if(response.data.status==='success'){     
-            showAlert('success',`Welcome to Natours, ${name}`);       
+            showAlert('success',`Welcome to BookMyTrip, ${name}`);       
             window.setTimeout(()=>{location.assign('/')},1000);
         }
     }

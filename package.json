@@ -1,5 +1,5 @@
 {
-  "name": "natoursapi",
+  "name": "bookmytripapi",
   "version": "1.0.0",
   "description": "Learning all node.js,express,mongoDB,mongoose",
   "main": "app.js",
