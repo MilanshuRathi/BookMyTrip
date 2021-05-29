@@ -14,8 +14,10 @@ export const bookTour= async tourId=>{
         stripe.redirectToCheckout({
             sessionId:session.data.session.id
         });   
+        console.log(session);
     } 
     catch(err){
+        console.log(err);
         showAlert('error','Payment Failed,please try again later');
         document.getElementById('bookingButton').textContent="Book tour now!";
     }   

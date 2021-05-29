@@ -35,7 +35,7 @@ app.use(cors());//Allowing every other domain to send requests to this domain
 //Allow Access-Control-Allow-Origin
 //it can be used when api is hosted on different domain and frontend application is on different domain e.g api.natours.com as api and natours-exolore.com as frontend
 //we can also restrict the domain names to allow them to send requests using origin option in cors
-// Example app.use(cors({origin:'https://www.natours.com'})) 
+// Example app.use(cors({origin:'https://www.bookmytrip.com'})) 
 
 //Options is a preflight request done by browsers whenever someone makes a cors request(other than GET,POST e.g PUT,PATCH,DELETE)
 //the browser checks if the server is ready for such requests or not...by making a preflight request ..before the real request 
