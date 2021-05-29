@@ -8,7 +8,7 @@ process.on('uncaughtException',err=>{
 });
 const app = require(`${__dirname}/app`);
 //Configuring connection with Database
-const url= process.env.DB.replace('<PASSWORD>', process.env.DB_PASSWD);
+const url= process.env.DB.replace('<password>', process.env.DB_PASSWD);
 mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true }).then(() => console.log('Connection to DB is successful'));
 //In case to connect with local database
 // mongoose.connect(process.env.DB_LOCAL,{useNewUrlParser:true,useCreateIndex:true,useFindAndModify:true}).then(con=>console.log(con)).catch(err=>console.log(err));
