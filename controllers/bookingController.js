@@ -48,7 +48,7 @@ exports.webhookCheckout=(request,response,next)=>{
             process.env.STRIPE_WEBHOOK_KEY
         );
         console.log(event);
-        if(event.type==='checkout.session.async_payment_succeeded')
+        if(event.type==='checkout.session.completed')
         createBookingCheckout(event.data.object);
         response.status(200).json({
             recieved:true
