@@ -11,7 +11,7 @@ exports.getCheckoutSession=catchAsyncError(async (request,response,next)=>{
     const session=await stripe.checkout.sessions.create({
         payment_method_types:['card'],        
         // success_url:`${request.protocol}://${request.get('host')}/my-bookings/?tour=${request.params.tourId}&user=${request.user.id}&price=${tour.price}`,
-        success_url:`${request.protocol}://${request.get('host')}/webhook-checkout`,
+        success_url:`${request.protocol}://${request.get('host')}/my-bookings?alert=booking`,
         cancel_url:`${request.protocol}://${request.get('host')}/tour/${tour.slug}`,
         customer_email:request.user.email,
         client_reference_id:request.params.tourId,
@@ -47,15 +47,17 @@ exports.webhookCheckout=(request,response,next)=>{
             signature,
             process.env.STRIPE_WEBHOOK_KEY
         );
+        console.log(event);
+        if(event.type==='checkout.session.async_payment_succeeded')
+        createBookingCheckout(event.data.object);
+        response.status(200).json({
+            recieved:true
+        });
     }     
     catch(err){
+        console.log(err);
         return response.status(400).send(`Webhook error:${err.message}`);
     }
-    if(event.type==='checkout.session.completed')
-        createBookingCheckout(event.data.object);
-    response.status(200).json({
-        recieved:true
-    });
 };
 exports.getAllBookings=factory.getAll(Booking);
 exports.getBooking=factory.getOne(Booking);
